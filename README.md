@@ -18,3 +18,8 @@
 ## Feature: Photo Search
 
 - [ ] Search bar on the gallery page to look up by title
+
+## Nice to have
+
+- [ ] Dark mode
+- [ ]
