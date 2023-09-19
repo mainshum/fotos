@@ -2,8 +2,8 @@
 
 ## Feature: Photo Gallery
 
-- [ ] Fetch photos from the JSONPlaceholder API. Display the photos in a grid format, with:
-  - [ ] thumbnail
+- [x] Fetch photos from the JSONPlaceholder API. Display the photos in a grid format, with:
+  - [x] thumbnail
   - [ ] title (truncate if too long)
 - [ ] paginate, infinite scroll
 

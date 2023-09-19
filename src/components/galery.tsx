@@ -4,6 +4,23 @@ import { PHOTOS_URL } from "@/lib/const";
 import { z } from "zod";
 
 import { useQuery } from "react-query";
+import { Input } from "./ui/input";
+
+import { useEffect, useState } from "react";
+
+function useDebounce<T>(value: T, delay?: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 const Photo = z.object({
   id: z.number(),
@@ -13,6 +30,7 @@ const Photo = z.object({
 
 const Photos = z.array(Photo);
 
+type Photo = z.infer<typeof Photo>;
 type Photos = z.infer<typeof Photos>;
 
 const getPhotos = () =>
@@ -21,21 +39,48 @@ const getPhotos = () =>
     .then(Photos.parse);
 
 const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
-  <div className="flex flex-col justify-start">
+  <div className="flex flex-col justify-start gap-">
     <img src={photo.thumbnailUrl} alt={photo.title}></img>
-    <p>{photo.title}</p>
+    <p className="truncate">{photo.title}</p>
   </div>
 );
 
+const photosAtOnce = 10;
+const constTrue = () => true;
+
+const filterPhotos = (phrase: string | null, photos: Photos | undefined) => {
+  const predicate = !phrase
+    ? constTrue
+    : (x: Photo) => x.title.includes(phrase);
+
+  return !photos ? [] : photos.filter(predicate).slice(0, photosAtOnce);
+};
+
 export default function Galery() {
+  const [value, setValue] = useState<string>("");
+
+  const photoSearchDebounced = useDebounce<string>(value, 500);
+
+  const photoSearch =
+    photoSearchDebounced.length === 0 ? null : photoSearchDebounced;
+
   const query = useQuery("PHOTOS", getPhotos);
+
+  const photos = filterPhotos(photoSearch, query.data);
 
   return (
     <div>
-      <h1 className="text-4xl">Fotos</h1>
-      {query.data?.slice(0, 3).map((p) => (
-        <GalPhoto key={p.id} photo={p} />
-      ))}
+      <div className="py-8">
+        <Input
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search"
+        />
+      </div>
+      <section className="flex flex-col gap-2">
+        {photos.map((p) => (
+          <GalPhoto key={p.id} photo={p} />
+        ))}
+      </section>
     </div>
   );
 }
