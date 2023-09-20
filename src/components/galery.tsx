@@ -11,6 +11,9 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Link } from "@swan-io/chicane";
 import { Router } from "@/lib/router";
 import { Photo, Photos } from "@/lib/types";
+import { Skeleton } from "./ui/skeleton";
+import { cn } from "@/lib/utils";
+import { LazyImage } from "./lazy-image";
 
 function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -41,9 +44,9 @@ const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
     }
     className="flex flex-col justify-start w-[150px]"
   >
-    <img
-      width="100%"
-      height="auto"
+    <LazyImage
+      width={150}
+      height={150}
       src={photo.thumbnailUrl}
       alt={photo.title}
     />
@@ -85,6 +88,9 @@ export default function Galery() {
         />
       </div>
       <ul ref={elRef} className="grid justify-between grid-cols-auto-150px">
+        {photos.length === 0 && (
+          <h1 className="center-absolute">There is no photos to display</h1>
+        )}
         {photos.map((p) => (
           <GalPhoto key={p.id} photo={p} />
         ))}
