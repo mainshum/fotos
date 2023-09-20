@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import { Input } from "./ui/input";
 
 import { useEffect, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -49,17 +50,17 @@ const photosAtOnce = 10;
 const constTrue = () => true;
 
 const filterPhotos = (phrase: string | null, photos: Photos | undefined) => {
-  const predicate = !phrase
-    ? constTrue
-    : (x: Photo) => x.title.includes(phrase);
+  const filter = !phrase ? constTrue : (x: Photo) => x.title.includes(phrase);
 
-  return !photos ? [] : photos.filter(predicate).slice(0, photosAtOnce);
+  return !photos ? [] : photos.filter(filter).slice(0, photosAtOnce);
 };
 
 export default function Galery() {
   const [value, setValue] = useState<string>("");
 
   const photoSearchDebounced = useDebounce<string>(value, 500);
+
+  const [elRef] = useAutoAnimate();
 
   const photoSearch =
     photoSearchDebounced.length === 0 ? null : photoSearchDebounced;
@@ -76,7 +77,7 @@ export default function Galery() {
           placeholder="Search"
         />
       </div>
-      <section className="flex flex-col gap-2">
+      <section ref={elRef} className="flex flex-col gap-2">
         {photos.map((p) => (
           <GalPhoto key={p.id} photo={p} />
         ))}

@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cypress": "^13.2.0",
