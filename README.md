@@ -19,7 +19,7 @@
 
 - [ ] Search bar on the gallery page to look up by title
 
-## Nice to have
+## Nice
 
 - [ ] Dark mode
-- [ ]
+- [ ] Only load as many elements as necessary (less in mobile)

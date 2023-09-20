@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useQuery } from "react-query";
 import { Input } from "./ui/input";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 function useDebounce<T>(value: T, delay?: number): T {
@@ -40,13 +40,18 @@ const getPhotos = () =>
     .then(Photos.parse);
 
 const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
-  <div className="flex flex-col justify-start gap-">
-    <img src={photo.thumbnailUrl} alt={photo.title}></img>
+  <div className="flex flex-col justify-start w-[150px]">
+    <img
+      width="100%"
+      height="auto"
+      src={photo.thumbnailUrl}
+      alt={photo.title}
+    ></img>
     <p className="truncate">{photo.title}</p>
   </div>
 );
 
-const photosAtOnce = 10;
+const photosAtOnce = 50;
 const constTrue = () => true;
 
 const filterPhotos = (phrase: string | null, photos: Photos | undefined) => {
@@ -77,7 +82,10 @@ export default function Galery() {
           placeholder="Search"
         />
       </div>
-      <section ref={elRef} className="flex flex-col gap-2">
+      <section
+        ref={elRef}
+        className="grid justify-between grid-cols-auto-150px"
+      >
         {photos.map((p) => (
           <GalPhoto key={p.id} photo={p} />
         ))}
