@@ -8,6 +8,8 @@ import { Input } from "./ui/input";
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { Link } from "@swan-io/chicane";
+import { Router } from "@/lib/router";
 
 function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -40,7 +42,15 @@ const getPhotos = () =>
     .then(Photos.parse);
 
 const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
-  <div className="flex flex-col justify-start w-[150px]">
+  <li
+    onClick={() => {
+      (document as any).startViewTransition(() =>
+        Router.push("Photo", { photoId: photo.id.toString() })
+      );
+    }}
+    role="button"
+    className="flex flex-col justify-start w-[150px]"
+  >
     <img
       width="100%"
       height="auto"
@@ -48,7 +58,7 @@ const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
       alt={photo.title}
     ></img>
     <p className="truncate">{photo.title}</p>
-  </div>
+  </li>
 );
 
 const photosAtOnce = 50;
@@ -82,14 +92,11 @@ export default function Galery() {
           placeholder="Search"
         />
       </div>
-      <section
-        ref={elRef}
-        className="grid justify-between grid-cols-auto-150px"
-      >
+      <ul ref={elRef} className="grid justify-between grid-cols-auto-150px">
         {photos.map((p) => (
           <GalPhoto key={p.id} photo={p} />
         ))}
-      </section>
+      </ul>
     </div>
   );
 }

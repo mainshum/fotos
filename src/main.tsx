@@ -4,21 +4,23 @@ import "./index.css";
 import Galery from "./components/galery.tsx";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+import Photo from "./components/photo.tsx";
+import { Router } from "./lib/router.ts";
 
 const client = new QueryClient();
 
 function App() {
+  const route = Router.useRoute(["Home", "Photo"]);
+
   return (
     <QueryClientProvider client={client}>
-      {/* <nav>
-        <header>
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            Fotos
-          </h1>
-        </header>
-      </nav> */}
       <main className="container">
-        <Galery />
+        {/* greatly simplfied - all links that do not point to a specific foto are mapped to galery */}
+        {route?.name === "Photo" ? (
+          <Photo photoId={route.params.photoId} />
+        ) : (
+          <Galery />
+        )}
       </main>
     </QueryClientProvider>
   );
