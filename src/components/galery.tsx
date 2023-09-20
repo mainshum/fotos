@@ -10,6 +10,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Link } from "@swan-io/chicane";
 import { Router } from "@/lib/router";
+import { Photo, Photos } from "@/lib/types";
 
 function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -25,17 +26,6 @@ function useDebounce<T>(value: T, delay?: number): T {
   return debouncedValue;
 }
 
-const Photo = z.object({
-  id: z.number(),
-  title: z.string(),
-  thumbnailUrl: z.string(),
-});
-
-const Photos = z.array(Photo);
-
-type Photo = z.infer<typeof Photo>;
-type Photos = z.infer<typeof Photos>;
-
 const getPhotos = () =>
   fetch(PHOTOS_URL)
     .then((x) => x.json())
@@ -43,12 +33,12 @@ const getPhotos = () =>
 
 const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
   <li
-    onClick={() => {
+    data-photo-id={photo.id}
+    onClick={() =>
       (document as any).startViewTransition(() =>
         Router.push("Photo", { photoId: photo.id.toString() })
-      );
-    }}
-    role="button"
+      )
+    }
     className="flex flex-col justify-start w-[150px]"
   >
     <img
@@ -56,7 +46,7 @@ const GalPhoto = ({ photo }: { photo: z.infer<typeof Photo> }) => (
       height="auto"
       src={photo.thumbnailUrl}
       alt={photo.title}
-    ></img>
+    />
     <p className="truncate">{photo.title}</p>
   </li>
 );
@@ -65,7 +55,9 @@ const photosAtOnce = 50;
 const constTrue = () => true;
 
 const filterPhotos = (phrase: string | null, photos: Photos | undefined) => {
-  const filter = !phrase ? constTrue : (x: Photo) => x.title.includes(phrase);
+  const filter = !phrase
+    ? constTrue
+    : (x: z.infer<typeof Photo>) => x.title.includes(phrase);
 
   return !photos ? [] : photos.filter(filter).slice(0, photosAtOnce);
 };

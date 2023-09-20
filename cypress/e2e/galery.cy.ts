@@ -5,27 +5,29 @@ const setViewport = {
 };
 
 describe("happy path", () => {
-  describe("iphone 8", () => {
-    it("displays 10 photos", () => {
-      cy.viewport("iphone-8");
-      cy.intercept(PHOTOS_URL, { fixture: "photos.json" }).as("getPhotos");
-      cy.intercept("https://via.placeholder.com/150/*", {
-        fixture: "thumb-150x150.png,null",
-      }).as("photoRequest");
-
-      cy.visit("/");
-      cy.findAllByRole("img").should("have.length", 10);
+  beforeEach(() => {
+    cy.viewport("macbook-16");
+    cy.intercept(PHOTOS_URL, { fixture: "photos.json" }).as("getPhotos");
+    cy.intercept("https://via.placeholder.com/150/*", {
+      fixture: "thumb-150x150.png,null",
     });
   });
-  describe("iphone 12", () => {
-    it.only("displays 10 photos", () => {
-      cy.viewport("macbook-16");
-      cy.intercept(PHOTOS_URL, { fixture: "photos.json" }).as("getPhotos");
-      cy.intercept("https://via.placeholder.com/150/*", {
-        fixture: "thumb-150x150.png,null",
-      }).as("photoRequest");
+  it("show 50 photos initially", () => {
+    cy.visit("/");
+    cy.findAllByRole("img").should("have.length", 50);
+  });
+  it.only("click on photo with id X goes to /photo/X", () => {
+    let idSelected;
+    cy.visit("/");
+    cy.findAllByRole("listitem")
+      .first()
+      .then(($el) => {
+        const id = $el.data("photo-id");
+        expect(id).to.exist;
 
-      cy.visit("/");
-    });
+        idSelected = id;
+      })
+      .click()
+      .then(() => cy.url().should("contain", `photos/${idSelected}`));
   });
 });

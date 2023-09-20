@@ -9,6 +9,7 @@
 
 body {
   font-family: Inter;
+  min-height: 100vh;
 }
 
 @layer base {
@@ -81,5 +82,8 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .center-absolute {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
 }

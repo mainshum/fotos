@@ -14,7 +14,7 @@ function App() {
 
   return (
     <QueryClientProvider client={client}>
-      <main className="container">
+      <main className="container min-h-screen">
         {/* greatly simplfied - all links that do not point to a specific foto are mapped to galery */}
         {route?.name === "Photo" ? (
           <Photo photoId={route.params.photoId} />
