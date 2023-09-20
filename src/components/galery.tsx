@@ -6,13 +6,10 @@ import { z } from "zod";
 import { useQuery } from "react-query";
 import { Input } from "./ui/input";
 
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Link } from "@swan-io/chicane";
 import { Router } from "@/lib/router";
 import { Photo, Photos } from "@/lib/types";
-import { Skeleton } from "./ui/skeleton";
-import { cn } from "@/lib/utils";
 import { LazyImage } from "./lazy-image";
 
 function useDebounce<T>(value: T, delay?: number): T {
