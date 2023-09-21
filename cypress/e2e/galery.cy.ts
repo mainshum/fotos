@@ -1,4 +1,4 @@
-import { PHOTOS_URL } from "../../src/lib/const";
+import { FAV_ID_LOCAL_STORAGE, PHOTOS_URL } from "../../src/lib/const";
 
 describe("happy path", () => {
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe("happy path", () => {
       .click()
       .then(() => cy.url().should("contain", `photos/${idSelected}`));
   });
-  it.only("if tail of photos list is in viewport extra 50 photos are loaded", () => {
+  it("if tail of photos list is in viewport extra 50 photos are loaded", () => {
     let idSelected;
     cy.visit("/");
     cy.findAllByRole("img").should("have.length", 50);
@@ -34,5 +34,18 @@ describe("happy path", () => {
     cy.scrollTo("bottom");
 
     cy.findAllByRole("img").should("have.length", 100);
+  });
+
+  it.only("toggles favourite and saves to local storage when Star is clicked", () => {
+    cy.visit("/");
+
+    cy.findAllByTestId("fav-star").should("have.length", 50).first().click();
+
+    cy.window().then((win) => {
+      const parsed = JSON.parse(win.localStorage.getItem(FAV_ID_LOCAL_STORAGE));
+
+      expect(Array.isArray(parsed)).to.be.true;
+      expect(parsed.length).to.eq(1);
+    });
   });
 });

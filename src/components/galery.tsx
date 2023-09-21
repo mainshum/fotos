@@ -68,6 +68,7 @@ const GalPhoto = React.forwardRef<HTMLLIElement, GalPhotoProps>(
       <div className="flex justify-between items-center">
         <p className="truncate">{photo.title}</p>
         <Star
+          data-testid="fav-star"
           fill={photo.isFav ? "gold" : "none"}
           onClick={() => onFavToggle(photo.id)}
           className="w-4 h-4 shrink-0 cursor-pointer"
