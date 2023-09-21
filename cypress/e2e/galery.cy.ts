@@ -1,9 +1,5 @@
 import { PHOTOS_URL } from "../../src/lib/const";
 
-const setViewport = {
-  iphone12() {},
-};
-
 describe("happy path", () => {
   beforeEach(() => {
     cy.viewport("macbook-16");
@@ -16,7 +12,7 @@ describe("happy path", () => {
     cy.visit("/");
     cy.findAllByRole("img").should("have.length", 50);
   });
-  it.only("click on photo with id X goes to /photo/X", () => {
+  it("click on photo with id X goes to /photo/X", () => {
     let idSelected;
     cy.visit("/");
     cy.findAllByRole("listitem")
@@ -29,5 +25,14 @@ describe("happy path", () => {
       })
       .click()
       .then(() => cy.url().should("contain", `photos/${idSelected}`));
+  });
+  it.only("if tail of photos list is in viewport extra 50 photos are loaded", () => {
+    let idSelected;
+    cy.visit("/");
+    cy.findAllByRole("img").should("have.length", 50);
+
+    cy.scrollTo("bottom");
+
+    cy.findAllByRole("img").should("have.length", 100);
   });
 });

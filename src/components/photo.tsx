@@ -1,24 +1,13 @@
 import { PHOTOS_URL } from "@/lib/const";
 import { useQuery } from "react-query";
 import { Photo as P } from "@/lib/types";
-import { Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "@swan-io/chicane";
 import { Router } from "@/lib/router";
 import { LazyImage } from "./lazy-image";
 import { match } from "ts-pattern";
-
-function Loader() {
-  return (
-    <div className="center-absolute">
-      <Loader2 className="w-8 h-8 animate-spin" />
-    </div>
-  );
-}
-
-function Error() {
-  return <div>Unexpected error occured</div>;
-}
+import Error from "./error";
+import Loader from "./loader";
 
 // photos are [600, 600];
 export default function Photo({ photoId }: { photoId: string }) {
@@ -32,8 +21,7 @@ export default function Photo({ photoId }: { photoId: string }) {
   });
 
   return match(query)
-    .with({ status: "loading" }, { status: "idle" }, () => <Loader></Loader>)
-    .with({ status: "error" }, () => <Error></Error>)
+    .with({ status: "error" }, () => <Error />)
     .with({ status: "success" }, ({ data: { url, title, id } }) => (
       <div className="py-16">
         <article className="flex flex-col items-center gap-4">
@@ -59,5 +47,5 @@ export default function Photo({ photoId }: { photoId: string }) {
         </article>
       </div>
     ))
-    .exhaustive();
+    .otherwise(() => <Loader />);
 }
