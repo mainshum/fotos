@@ -100,7 +100,6 @@ function usePhotos(photoSearch: null | string) {
 }
 
 export default function Galery() {
-  const lastPhotoRef = React.useRef<HTMLLIElement>(null);
   const [value, setValue] = useState<string>("");
 
   const photoSearchDebounced = useDebounce<string>(value, 500);
