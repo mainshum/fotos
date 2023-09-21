@@ -7,6 +7,8 @@ export const Photo = z.object({
   url: z.string(),
 });
 
+export type Photo = z.infer<typeof Photo>;
+
 export const Photos = z.array(Photo);
 
 export type Photos = z.infer<typeof Photos>;
