@@ -25,25 +25,26 @@ export default function Photo({ photoId }: { photoId: string }) {
     .with({ status: "success" }, ({ data: { url, title, id } }) => (
       <div className="py-16">
         <article className="flex flex-col items-center gap-4">
+          <Button variant="secondary" className="w-[150px]" asChild>
+            <Link to={Router.Home()}>Go to galery</Link>
+          </Button>
           <LazyImage
-            className="w- h-[600px]"
+            className="w-[600px] h-[600px]"
             width={600}
             height={600}
             src={url}
             alt={title}
           />
           <div>
-            <span className="font-bold">ID</span>
-            <h2>{id}</h2>
+            <div>
+              <span className="font-bold">ID</span>
+              <h2>{id}</h2>
+            </div>
+            <div>
+              <span className="font-bold">Title</span>
+              <h2>{title}</h2>
+            </div>
           </div>
-          <div>
-            <span className="font-bold">Title</span>
-            <h2>{title}</h2>
-          </div>
-
-          <Button className="w-[150px]" asChild>
-            <Link to={Router.Home()}>Galery</Link>
-          </Button>
         </article>
       </div>
     ))
