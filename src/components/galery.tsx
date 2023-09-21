@@ -16,7 +16,6 @@ import Loader from "./loader";
 import Error from "./error";
 import React from "react";
 import { Star } from "lucide-react";
-import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 
 function useDebounce<T>(value: T, delay?: number): T {
