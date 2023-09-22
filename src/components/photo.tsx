@@ -14,6 +14,7 @@ export default function Photo({ photoId }: { photoId: string }) {
   const photoDetailsUrl = `${PHOTOS_URL}/${photoId}`;
   const query = useQuery({
     queryKey: ["PHOTO", photoId],
+    retry: false,
     queryFn: () =>
       fetch(photoDetailsUrl)
         .then((res) => res.json())
@@ -23,28 +24,26 @@ export default function Photo({ photoId }: { photoId: string }) {
   return match(query)
     .with({ status: "error" }, () => <Error />)
     .with({ status: "success" }, ({ data: { url, title, id } }) => (
-      <div className="py-16">
-        <article className="flex flex-col items-center gap-4">
-          <Button variant="secondary" className="w-[150px]" asChild>
-            <Link to={Router.Home()}>Go to galery</Link>
-          </Button>
+      <div className="center-absolute flex flex-col gap-3">
+        <Button className="text-2xl" asChild>
+          <Link to={Router.Home()}>Go to galery</Link>
+        </Button>
+        <article className="relative">
           <LazyImage
-            className="w-[600px] h-[600px]"
+            className="rounded-xl"
             width={600}
             height={600}
             src={url}
             alt={title}
           />
-          <div>
-            <div>
-              <span className="font-bold">ID</span>
-              <h2>{id}</h2>
-            </div>
-            <div>
-              <span className="font-bold">Title</span>
-              <h2>{title}</h2>
-            </div>
+          <div className="absolute flex items-center justify-center w-[60px] h-[60px] top-5 right-5 rounded-full border-4 border-black">
+            <h1 className="font-extrabold text-right tracking-tight text-5xl">
+              {id}
+            </h1>
           </div>
+          <h1 className="absolute max-h-[27%] overflow-hidden bottom-5 right-5 w-full font-extrabold text-right tracking-tight text-2xl lg:text-5xl">
+            {title}
+          </h1>
         </article>
       </div>
     ))

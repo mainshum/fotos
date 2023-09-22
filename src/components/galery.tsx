@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useQuery } from "react-query";
 import { Input } from "./ui/input";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Router } from "@/lib/router";
 import { Photo, Photos } from "@/lib/types";
@@ -17,20 +17,7 @@ import Error from "./error";
 import React from "react";
 import { Star } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
-
-function useDebounce<T>(value: T, delay?: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
+import { useDebounce } from "@/lib/hooks";
 
 const getPhotos = () =>
   fetch(PHOTOS_URL)
@@ -79,12 +66,12 @@ const GalPhoto = React.forwardRef<HTMLLIElement, GalPhotoProps>(
 );
 
 const pageSize = 50;
-const constTrue = () => true;
 
 const filterPhotosBySearch = (
   phrase: string | null,
   photos: FavPhoto[] | undefined
 ) => {
+  const constTrue = () => true;
   const filter = !phrase
     ? constTrue
     : (x: z.infer<typeof Photo>) => x.title.includes(phrase);
@@ -115,7 +102,7 @@ function usePhotos(photoSearch: null | string, filterFavourites: boolean) {
     return [];
   });
 
-  const query = useQuery("photos", getPhotos);
+  const query = useQuery("photos", { queryFn: getPhotos, retry: false });
 
   const loadNextPage = () => setPagesLoaded((p) => p + 1);
 

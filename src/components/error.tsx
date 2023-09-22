@@ -1,3 +1,6 @@
+// poor error component
 export default function Error() {
-  return <div>Unexpected error occured</div>;
+  return (
+    <div className="center-absolute text-center">Unexpected error occured</div>
+  );
 }
